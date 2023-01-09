@@ -14,19 +14,32 @@ public class Spawner : MonoBehaviour
     {
 
     }
-
+    private void Awake()
+    {
+        SpawnCube();
+        SpawnCube();
+        SpawnCube();
+        SpawnCube();
+        SpawnCube();
+    }
     // Update is called once per frame
     void Update()
     {
         time += Time.deltaTime;
         if (time >= 1 / _spawnRate)
         {
-            randX = Random.Range(0f, Camera.main.pixelWidth);
-            randY = Random.Range(0f, Camera.main.pixelHeight);
-            var camView = Camera.main.ScreenToWorldPoint(new Vector3(randX, randY, _distance));
-            var spawned = Instantiate(_objectToSpawn, camView, Quaternion.identity);
+            // randX = Random.Range(0f, Camera.main.pixelWidth);
+            // randY = Random.Range(0f, Camera.main.pixelHeight);
+            // var camView = Camera.main.ScreenToWorldPoint(new Vector3(randX, randY, _distance));
+            // var spawned = Instantiate(_objectToSpawn, camView, Quaternion.identity);
             time = 0f;
-            _spawnedObject.Add(spawned);
+            // _spawnedObject.Add(spawned);
+            GameObject firstObject = _spawnedObject[0];
+            firstObject.SetActive(true);
+            _spawnedObject.RemoveAt(0);
+            _spawnedObject.Add(firstObject);
+
+
         }
         foreach (GameObject item in _spawnedObject)
         {
@@ -39,9 +52,19 @@ public class Spawner : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 _spawnedObject.Remove(hit.transform.gameObject);
-                Destroy(hit.transform.gameObject);
+                //Destroy(hit.transform.gameObject);
+                hit.transform.gameObject.SetActive(false);
             }
         }
 
+    }
+    void SpawnCube()
+    {
+        randX = Random.Range(0f, Camera.main.pixelWidth);
+        randY = Random.Range(0f, Camera.main.pixelHeight);
+        var camView = Camera.main.ScreenToWorldPoint(new Vector3(randX, randY, _distance));
+        var spawned = Instantiate(_objectToSpawn, camView, Quaternion.identity);
+        _spawnedObject.Add(spawned);
+        spawned.SetActive(false);
     }
 }
