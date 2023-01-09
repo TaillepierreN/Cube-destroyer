@@ -5,8 +5,9 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     float time =0f, randX, randY;
-    [SerializeField] float _spawnRate,_distance;
+    [SerializeField] float _spawnRate,_distance,_movingSpeed;
     [SerializeField] GameObject _objectToSpawn;
+    public List<GameObject> _spawnedObject;
     
     // Start is called before the first frame update
     void Start()
@@ -23,8 +24,14 @@ public class Spawner : MonoBehaviour
             randX = Random.Range(0f,Camera.main.pixelWidth);
             randY = Random.Range(0f,Camera.main.pixelHeight);
             var camView = Camera.main.ScreenToWorldPoint(new Vector3(randX,randY,_distance));
-            Instantiate(_objectToSpawn,camView,Quaternion.identity);
+            var spawned = Instantiate(_objectToSpawn,camView,Quaternion.identity);
             time =0f;
+            _spawnedObject.Add(spawned);
+        }
+        foreach(GameObject item in _spawnedObject)
+        {
+            Debug.Log("hey");
+            item.transform.Translate(-Camera.main.transform.forward*Time.deltaTime*_movingSpeed);
         }
     }
 }
