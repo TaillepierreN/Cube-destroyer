@@ -16,11 +16,8 @@ public class Spawner : MonoBehaviour
     }
     private void Awake()
     {
-        SpawnCube();
-        SpawnCube();
-        SpawnCube();
-        SpawnCube();
-        SpawnCube();
+        SpawnCubes(5);
+
     }
     // Update is called once per frame
     void Update()
@@ -58,13 +55,21 @@ public class Spawner : MonoBehaviour
         }
 
     }
-    void SpawnCube()
+    void SpawnCubes(int numberofCubes)
+    {
+        for (int i = 0; i < numberofCubes; i++)
+        {
+        var spawned = SpawnCube();
+        _spawnedObject.Add(spawned);
+        spawned.SetActive(false);
+        }
+
+    }
+    GameObject SpawnCube()
     {
         randX = Random.Range(0f, Camera.main.pixelWidth);
         randY = Random.Range(0f, Camera.main.pixelHeight);
         var camView = Camera.main.ScreenToWorldPoint(new Vector3(randX, randY, _distance));
-        var spawned = Instantiate(_objectToSpawn, camView, Quaternion.identity);
-        _spawnedObject.Add(spawned);
-        spawned.SetActive(false);
+        return Instantiate(_objectToSpawn, camView, Quaternion.identity);
     }
 }
